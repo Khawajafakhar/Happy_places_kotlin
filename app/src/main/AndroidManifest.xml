@@ -16,8 +16,8 @@
             android:name=".AddHappyPlaceActivity"
             android:screenOrientation="portrait"
             android:label="Add Happy Place"
-            android:exported="false"
-            android:theme="@style/CustomToolbarStyle">
+            android:exported="true"
+            >
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
