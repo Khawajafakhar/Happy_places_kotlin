@@ -1,13 +1,17 @@
 package com.example.happyplacesapp.database
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
+import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.happyplacesapp.models.HappyPlace
 
-class DatabaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME,null,
-    DATABASE_VERSION) {
+class DatabaseHandler(context: Context) : SQLiteOpenHelper(
+    context, DATABASE_NAME, null,
+    DATABASE_VERSION
+) {
 
     companion object {
         private const val DATABASE_VERSION = 1 // Database version
@@ -70,6 +74,39 @@ class DatabaseHandler(context: Context) : SQLiteOpenHelper(context, DATABASE_NAM
 
         db.close() // Closing database connection
         return result
+    }
+
+    @SuppressLint("Range")
+    fun getAllHappyPlaces(): ArrayList<HappyPlace> {
+        var allHappyPlaces = ArrayList<HappyPlace>()
+        val selectQuery = "SELECT * FROM $TABLE_HAPPY_PLACE"
+        val db = this.readableDatabase
+
+        try {
+            val cursor = db.rawQuery(selectQuery, null)
+            if (cursor.moveToFirst()) {
+                do {
+                    val happyPlace = HappyPlace(
+                        cursor.getInt(cursor.getColumnIndex(KEY_ID)),
+                        cursor.getString(cursor.getColumnIndex(KEY_TITLE)),
+                        cursor.getString(cursor.getColumnIndex(KEY_IMAGE)),
+                        cursor.getString(cursor.getColumnIndex(KEY_DESCRIPTION)),
+                        cursor.getString(cursor.getColumnIndex(KEY_DATE)),
+                        cursor.getString(cursor.getColumnIndex(KEY_LOCATION)),
+                        cursor.getDouble(cursor.getColumnIndex(KEY_LATITUDE)),
+                        cursor.getDouble(cursor.getColumnIndex(KEY_LONGITUDE)),
+                        )
+                    allHappyPlaces.add(happyPlace)
+                } while (cursor.moveToNext())
+                cursor.close()
+            }
+        } catch (e: SQLException) {
+            db.execSQL(selectQuery)
+
+            return ArrayList()
+        }
+
+        return allHappyPlaces
     }
     // END
 }
