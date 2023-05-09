@@ -1,8 +1,10 @@
-package com.example.happyplacesapp
+package com.example.happyplacesapp.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.happyplacesapp.R
+import com.example.happyplacesapp.activities.AddHappyPlaceActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
@@ -12,7 +14,7 @@ class MainActivity : AppCompatActivity() {
 
         var fabAddHappyPlaceActivity:FloatingActionButton = findViewById(R.id.fabAddPlace)
         fabAddHappyPlaceActivity.setOnClickListener {
-            val intent = Intent(this,AddHappyPlaceActivity::class.java)
+            val intent = Intent(this, AddHappyPlaceActivity::class.java)
             startActivity(intent)
         }
 

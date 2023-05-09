@@ -1,12 +1,13 @@
-package com.example.happyplacesapp
+package com.example.happyplacesapp.activities
 
 import android.Manifest.*
-import android.Manifest.permission.CAMERA
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
@@ -18,17 +19,19 @@ import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.EditText
-import android.widget.Gallery
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import com.example.happyplacesapp.R
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
+import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -38,6 +41,9 @@ class AddHappyPlaceActivity : AppCompatActivity(), OnClickListener {
     private var btnAddImage: TextView? = null
     private var ivSelectedImage :ImageView? = null
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
+    private var saveImageToInternalStorage : Uri? = null
+    private var mLatitude : Double = 0.0
+    private var mLongitude : Double = 0.0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_happy_place)
@@ -103,6 +109,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), OnClickListener {
                    try {
                        val selectedImageBitmap = MediaStore.Images.Media.
                        getBitmap(this.contentResolver,contentUri)
+                      saveImageToInternalStorage= saveImageToInternalStorage(selectedImageBitmap)
                        ivSelectedImage?.setImageBitmap(selectedImageBitmap)
 
                    }catch (e : IOException){
@@ -111,10 +118,10 @@ class AddHappyPlaceActivity : AppCompatActivity(), OnClickListener {
                }
            }else if(requestCode == CAMERA){
 
-               Log.e("DATA", (data!!.extras == null).toString())
 
                        val thumbnail = data!!.extras!!.get("data") as Bitmap?
-                      ivSelectedImage?.setImageBitmap(thumbnail!!)
+               saveImageToInternalStorage= saveImageToInternalStorage(thumbnail!!)
+               ivSelectedImage?.setImageBitmap(thumbnail)
 
 
            }
@@ -187,9 +194,26 @@ class AddHappyPlaceActivity : AppCompatActivity(), OnClickListener {
         date?.setText(sdf.format(cal.time).toString())
     }
 
+    private fun saveImageToInternalStorage(bitmap: Bitmap): Uri{
+        val wrapper = ContextWrapper(applicationContext)
+        var file = wrapper.getDir(IMAGE_DIRECTORY,Context.MODE_PRIVATE)
+        file = File(file,"${UUID.randomUUID()}.jpg")
+        try {
+            val stream : OutputStream = FileOutputStream(file)
+            bitmap.compress(Bitmap.CompressFormat.JPEG,100,stream)
+            stream.flush()
+            stream.close()
+        }catch (e: IOException){
+            e.printStackTrace()
+        }
+        return Uri.parse(file.absolutePath)
+
+    }
+
     companion object{
         private const val GALLERY = 1
         private const val CAMERA = 2
+        private const val IMAGE_DIRECTORY = "HappyPlacesImages"
 
     }
 }
