@@ -1,12 +1,14 @@
 package com.example.happyplacesapp
 
 import android.Manifest.*
+import android.Manifest.permission.CAMERA
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -81,7 +83,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), OnClickListener {
                 pictureDialog.setItems(pictureDialogueItem) { _, which ->
                     when (which) {
                         0 -> getUserPermission()
-                        1 -> Toast.makeText(this, "Image from Camera", Toast.LENGTH_SHORT).show()
+                        1 -> getPhotoFromCamera()
                     }
 
                 }
@@ -107,8 +109,37 @@ class AddHappyPlaceActivity : AppCompatActivity(), OnClickListener {
                        e.printStackTrace()
                    }
                }
+           }else if(requestCode == CAMERA){
+
+               Log.e("DATA", (data!!.extras == null).toString())
+
+                       val thumbnail = data!!.extras!!.get("data") as Bitmap?
+                      ivSelectedImage?.setImageBitmap(thumbnail!!)
+
+
            }
        }
+    }
+
+    private fun getPhotoFromCamera(){
+        Dexter.withContext(this).withPermissions(
+            permission.CAMERA,
+        ).withListener(object : MultiplePermissionsListener {
+            override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
+                Log.e("Camera",report!!.areAllPermissionsGranted().toString())
+                if (report!!.areAllPermissionsGranted()) {
+                    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    startActivityForResult(intent, CAMERA)
+                }
+            }
+
+            override fun onPermissionRationaleShouldBeShown(
+                permissions: List<PermissionRequest>,
+                token: PermissionToken
+            ) {
+                showRationalDialogueForPermission()
+            }
+        }).onSameThread().check()
     }
 
     private fun getUserPermission() {
@@ -158,5 +189,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), OnClickListener {
 
     companion object{
         private const val GALLERY = 1
+        private const val CAMERA = 2
+
     }
 }
