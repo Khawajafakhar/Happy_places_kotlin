@@ -18,7 +18,7 @@ open class HappyPlacesAdapter(
     private val context: Context,
     private var list: ArrayList<HappyPlace>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
+     private var onClickListener: OnClickListener? = null
     /**
      * Inflates the item views which is designed in xml layout file
      *
@@ -54,6 +54,18 @@ open class HappyPlacesAdapter(
             holder.itemView.findViewById<TextView>(R.id.tvTitle).text = model.title
             holder.itemView.findViewById<TextView>(R.id.tvDescription).text = model.description
         }
+
+        holder.itemView.setOnClickListener{
+
+            if(onClickListener != null){
+                onClickListener?.onClick(position,model)
+            }
+        }
+    }
+
+    fun setOnClickListener(onClickListener: OnClickListener){
+        this.onClickListener = onClickListener
+
     }
 
     /**
@@ -61,6 +73,10 @@ open class HappyPlacesAdapter(
      */
     override fun getItemCount(): Int {
         return list.size
+    }
+
+    interface OnClickListener{
+        fun onClick(position: Int,model : HappyPlace)
     }
 
     /**

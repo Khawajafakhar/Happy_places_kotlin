@@ -56,6 +56,14 @@ class MainActivity : AppCompatActivity() {
                 LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
             val happyPlacesAdapter = HappyPlacesAdapter(this, happyPlaceList)
             rvRecyclerView?.adapter = happyPlacesAdapter
+
+          happyPlacesAdapter.setOnClickListener(object : HappyPlacesAdapter.OnClickListener{
+              override fun onClick(position: Int, model: HappyPlace) {
+                  val intent = Intent(this@MainActivity,HappyPlacesDetails::class.java)
+                  startActivity(intent)
+              }
+
+          })
         }else{
           tvNoRecord?.visibility =View.VISIBLE
           rvRecyclerView?.visibility = View.GONE
