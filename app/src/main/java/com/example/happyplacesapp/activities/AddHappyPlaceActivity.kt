@@ -136,12 +136,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), OnClickListener {
                         var dbResult=db.addHappyPlace(happyPlace)
 
                         if(dbResult>0){
-                            Toast.makeText(
-                                this@AddHappyPlaceActivity,
-                                "Place has been added",
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
+                            setResult(Activity.RESULT_OK)
                             finish()
                         }
                     }
@@ -184,7 +179,6 @@ class AddHappyPlaceActivity : AppCompatActivity(), OnClickListener {
             permission.CAMERA,
         ).withListener(object : MultiplePermissionsListener {
             override fun onPermissionsChecked(report: MultiplePermissionsReport?) {
-                Log.e("Camera", report!!.areAllPermissionsGranted().toString())
                 if (report!!.areAllPermissionsGranted()) {
                     val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                     startActivityForResult(intent, CAMERA)

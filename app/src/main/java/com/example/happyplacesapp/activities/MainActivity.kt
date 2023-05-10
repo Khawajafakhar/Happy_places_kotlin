@@ -1,11 +1,13 @@
 package com.example.happyplacesapp.activities
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.happyplacesapp.R
@@ -26,9 +28,20 @@ class MainActivity : AppCompatActivity() {
         var fabAddHappyPlaceActivity: FloatingActionButton = findViewById(R.id.fabAddPlace)
         fabAddHappyPlaceActivity.setOnClickListener {
             val intent = Intent(this, AddHappyPlaceActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, ADD_PLACES_ACTIVITY_RESULT)
         }
         getAllPlacesFromDatabase()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == ADD_PLACES_ACTIVITY_RESULT){
+            if(resultCode == Activity.RESULT_OK){
+                getAllPlacesFromDatabase()
+            }else{
+                Log.e("Add Place" ,"Canceled")
+            }
+        }
     }
 
     private fun setupHappyPlacesRecyclerView(
@@ -55,4 +68,8 @@ class MainActivity : AppCompatActivity() {
         setupHappyPlacesRecyclerView(allHappyPlaces)
 
         }
+
+    companion object{
+        private const val ADD_PLACES_ACTIVITY_RESULT =1
+    }
     }
