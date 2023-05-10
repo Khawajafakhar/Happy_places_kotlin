@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.happyplacesapp.R
@@ -16,6 +17,7 @@ import com.example.happyplacesapp.adapters.HappyPlacesAdapter
 import com.example.happyplacesapp.database.DatabaseHandler
 import com.example.happyplacesapp.models.HappyPlace
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import pl.kitek.rvswipetodelete.SwipeToEditCallback
 
 class MainActivity : AppCompatActivity() {
     private var rvRecyclerView: RecyclerView? = null
@@ -28,9 +30,21 @@ class MainActivity : AppCompatActivity() {
         var fabAddHappyPlaceActivity: FloatingActionButton = findViewById(R.id.fabAddPlace)
         fabAddHappyPlaceActivity.setOnClickListener {
             val intent = Intent(this, AddHappyPlaceActivity::class.java)
+
             startActivityForResult(intent, ADD_PLACES_ACTIVITY_RESULT)
         }
 
+        val swipeToEditCallBack = object: SwipeToEditCallback(this){
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val adapter = rvRecyclerView?.adapter as HappyPlacesAdapter
+                adapter.notifyEditItem(this@MainActivity,viewHolder.adapterPosition,
+                    ADD_PLACES_ACTIVITY_RESULT)
+            }
+
+
+        }
+        val editItemTouchHelper =ItemTouchHelper(swipeToEditCallBack)
+        editItemTouchHelper.attachToRecyclerView(rvRecyclerView)
         getAllPlacesFromDatabase()
     }
 

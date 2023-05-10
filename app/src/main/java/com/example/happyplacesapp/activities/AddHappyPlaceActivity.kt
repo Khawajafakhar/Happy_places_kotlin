@@ -44,6 +44,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), OnClickListener {
     private var etTitle: EditText? = null
     private var etDescription: EditText? = null
     private var etLocation: EditText? = null
+    private var mHappyPlacesDetails: HappyPlace? =null
     private lateinit var dateSetListener: DatePickerDialog.OnDateSetListener
     private var saveImageToInternalStorage: Uri? = null
     private var mLatitude: Double = 0.0
@@ -57,6 +58,10 @@ class AddHappyPlaceActivity : AppCompatActivity(), OnClickListener {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         toolbarAddPlace.setNavigationOnClickListener {
             onBackPressed()
+        }
+        if(intent.hasExtra(MainActivity.HAPPY_PLACE_OBJECT)){
+            mHappyPlacesDetails = intent.getParcelableExtra(MainActivity.HAPPY_PLACE_OBJECT) as HappyPlace?
+
         }
         date = findViewById(R.id.et_date)
         btnAddImage = findViewById(R.id.tv_add_image)
@@ -73,7 +78,20 @@ class AddHappyPlaceActivity : AppCompatActivity(), OnClickListener {
 
         }
         updateDateInView()
+         if(mHappyPlacesDetails != null){
+             supportActionBar?.title = "Edit Happy place"
+             etTitle?.setText(mHappyPlacesDetails?.title)
+             etDescription?.setText(mHappyPlacesDetails?.description)
+             date?.setText(mHappyPlacesDetails?.date)
+             etLocation?.setText(mHappyPlacesDetails?.location)
+             btnAddImage?.text ="Edit Image"
+             btnSave?.text = "Update"
+             saveImageToInternalStorage =Uri.parse(mHappyPlacesDetails!!.image)
+             ivSelectedImage?.setImageURI(saveImageToInternalStorage)
+             mLatitude = mHappyPlacesDetails!!.latitude
+             mLongitude = mHappyPlacesDetails!!.longitude
 
+         }
         date?.setOnClickListener(this)
         btnAddImage?.setOnClickListener(this)
         btnSave?.setOnClickListener(this)
