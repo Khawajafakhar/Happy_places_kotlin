@@ -11,5 +11,6 @@
     <string name="image">image</string>
     <string name="there_is_no_places_yet">There is no places yet</string>
     <string name="image_content_description">image</string>
+    <string name="google_map_api_key">AIzaSyAA9ZTdlW4guOJ1VwSZeyJP0r1D4LKs9sU</string>
 
 </resources>
