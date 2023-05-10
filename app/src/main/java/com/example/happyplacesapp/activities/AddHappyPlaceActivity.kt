@@ -140,7 +140,7 @@ class AddHappyPlaceActivity : AppCompatActivity(), OnClickListener {
                     }
                     else -> {
                         val happyPlace = HappyPlace(
-                            0,
+                            if(mHappyPlacesDetails == null) 0 else mHappyPlacesDetails!!.id,
                             etTitle?.text.toString(),
                             saveImageToInternalStorage.toString(),
                             etDescription?.text.toString(),
@@ -151,11 +151,21 @@ class AddHappyPlaceActivity : AppCompatActivity(), OnClickListener {
                         )
 
                         val db = DatabaseHandler(this)
-                        var dbResult=db.addHappyPlace(happyPlace)
 
-                        if(dbResult>0){
-                            setResult(Activity.RESULT_OK)
-                            finish()
+                        if(mHappyPlacesDetails ==null) {
+                            var dbResultAdd = db.addHappyPlace(happyPlace)
+
+                            if (dbResultAdd > 0) {
+                                setResult(Activity.RESULT_OK)
+                                finish()
+                            }
+                        }else{
+                            var dbResultUpdate = db.updateHappyPlace(happyPlace)
+
+                            if (dbResultUpdate > 0) {
+                                setResult(Activity.RESULT_OK)
+                                finish()
+                            }
                         }
                     }
                 }

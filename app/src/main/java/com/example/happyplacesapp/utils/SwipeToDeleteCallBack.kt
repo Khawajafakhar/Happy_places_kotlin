@@ -1,12 +1,12 @@
 package com.example.happyplacesapp.utils
 
-import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.happyplacesapp.R
+import com.example.happyplacesapp.activities.MainActivity
 
 // START
 // For detail explanation of this class you can look at below link.
@@ -14,13 +14,13 @@ import com.example.happyplacesapp.R
 /**
  * A abstract class which we will use for edit feature.
  */
-abstract class SwipeToEditCallback(context: Context) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+abstract class SwipeToDeleteCallback(context: MainActivity) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
-    private val editIcon = ContextCompat.getDrawable(context, R.drawable.ic_edit_white_24dp)
+    private val editIcon = ContextCompat.getDrawable(context, R.drawable.ic_baseline_delete_24)
     private val intrinsicWidth = editIcon!!.intrinsicWidth
     private val intrinsicHeight = editIcon!!.intrinsicHeight
     private val background = ColorDrawable()
-    private val backgroundColor = Color.parseColor("#24AE05")
+    private val backgroundColor = Color.parseColor("#f44336")
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
 
 
@@ -40,8 +40,8 @@ abstract class SwipeToEditCallback(context: Context) : ItemTouchHelper.SimpleCal
     }
 
     override fun onChildDraw(
-            c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
-            dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean
+        c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
+        dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean
     ) {
 
         val itemView = viewHolder.itemView
