@@ -16,7 +16,7 @@ import com.example.happyplacesapp.models.HappyPlace
 
 open class HappyPlacesAdapter(
     private val context: Context,
-    private var list: ArrayList<HappyPlace>
+    private var list: ArrayList<HappyPlace>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     /**

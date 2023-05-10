@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, AddHappyPlaceActivity::class.java)
             startActivityForResult(intent, ADD_PLACES_ACTIVITY_RESULT)
         }
+
         getAllPlacesFromDatabase()
     }
 
