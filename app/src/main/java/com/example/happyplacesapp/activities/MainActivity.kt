@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
           happyPlacesAdapter.setOnClickListener(object : HappyPlacesAdapter.OnClickListener{
               override fun onClick(position: Int, model: HappyPlace) {
                   val intent = Intent(this@MainActivity,HappyPlacesDetails::class.java)
+                  intent.putExtra(HAPPY_PLACE_OBJECT,model)
                   startActivity(intent)
               }
 
@@ -80,5 +81,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object{
         private const val ADD_PLACES_ACTIVITY_RESULT =1
+         const val HAPPY_PLACE_OBJECT = "happy=place-object"
     }
     }
